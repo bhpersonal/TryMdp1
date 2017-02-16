@@ -1,7 +1,8 @@
 import MDP
 from itertools import groupby
 from operator import itemgetter
-
+import random
+import numpy.random as rnd
 
 
 def elem_add(t1, t2):
@@ -107,6 +108,17 @@ class Blockworld1(MDP.MDP):
         if new_state in self.fail_states: return self.penalty_value
 
         return self.time_cost
+
+    def perform_action(self, old_state, action):
+
+        tx = [(s2, self.transition_probs[(s1, a, s2)]) for (s1, a, s2) in self.transition_probs.keys() if s1 == old_state and a == action]
+
+        s2 = [s2 for (s2,p) in tx]
+        p = [p for (s2, p) in tx]
+
+        new_state = s2[rnd.choice(range(0, len(s2)), p=p)]
+        return new_state
+
 
     def render(self, policy, values):
 
